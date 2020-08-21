@@ -39,15 +39,15 @@ git clone $TEST_URL $TEST
 printf "⚙️  cloning finished\n"
 
 find $TEST -type f -name '*test*' -print0 | xargs -n 1 -0 -I {} bash -c 'set -e; f={}; cp $f $0/${f:$1}' $SOLUTION ${#TEST_FULL}
-curl_docker=$(curl -w '' -s https://lrn.dev/api/curriculum/courses/173 | jq -c '.lessons[] | select(.type=="project") | {name: .name, index: .index}')
+curl_course=$(curl -w '' -s https://lrn.dev/api/curriculum/courses/$TEST | jq -c '.lessons[] | select(.lesson_type=="project") | {name: .name, index: .index}')
 
 send_result(){
     data=$(jq -aRs . <<< ${5})
-    curl -s -X POST "https://lrn.dev/api/service/grade" -H "x-grade-secret: ${1}" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"username\":\"${2}\", \"lesson\":\"${3}\", \"status\": \"${4}\", \"logs\": ${data}}"
+    curl -s -X POST "https://lrn.dev/api/curriculum/lessons/project" -H "x-grade-secret: ${1}" -H "accept: application/json" -H "Content-Type: application/json" -d "{\"username\":\"${2}\", \"lessonName\":\"${3}\", \"status\": \"${4}\", \"log\": ${data}}"
     echo ""
 }
 
-for project in $curl_docker; do
+for project in $curl_course; do
     LESSON_NAME=$(echo $project | jq -r '.name' | sed s/-docker//g)
     echo $LESSON_NAME
 
