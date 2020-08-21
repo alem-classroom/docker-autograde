@@ -61,7 +61,7 @@ for project in $curl_course; do
     
     if [[ $last -eq 0 ]]; then
         printf "✅ $LESSON_NAME-$TEST passed\n"
-        send_result $API_KEY $GITHUB_ACTOR $LESSON_NAME-$TEST "done" "${result}"
+        send_result $API_KEY $GITHUB_ACTOR $LESSON_NAME-$TEST "finished" "${result}"
     else
         printf "🚫 $LESSON_NAME-$TEST failed\n"
         send_result $API_KEY $GITHUB_ACTOR $LESSON_NAME-$TEST "failed" "${result}"
